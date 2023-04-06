@@ -1,6 +1,7 @@
-# nextcloud_docker
+# docker setup
 
-Docker compose file for Nextcloud and Nextcloud (Collabora) Office for the new Queerreferat Aachen digital infrastructure
+docker setup for the new digital infrastructure of Queerreferat Aachen
+containing the whole setup for nextcloud and the proxy server right now. additional services (like nextcloud office and other non-nextcloud-related web services) still need to be added
 
 ## deploy
 
