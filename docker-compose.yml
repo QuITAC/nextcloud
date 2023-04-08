@@ -3,13 +3,11 @@ version: "3"
 volumes:
   nextcloud-db:
   nextcloud-app:
-  server-certs:
-  server-acme:
-  server-vhost.d:
-  server-html:
 
 networks:
-  proxy-tier:
+  proxy:
+    external: true
+    name: shared-proxy
 
 services:
   # MariaDB for data in Nextcloud
@@ -66,43 +64,9 @@ services:
     environment:
       - VIRTUAL_HOST=cloud.queerreferat.ac
       - LETSENCRYPT_HOST=cloud.queerreferat.ac
-      - LETSENCRYPT_EMAIL=info@queerreferat.ac
+      - LETSENCRYPT_EMAIL=<EMAIL>
     depends_on:
       - nextcloud-app
     networks:
-      - proxy-tier
+      - proxy
       - default
-
-  # ADDITIONAL DOCKER CONFIGURATION FOR WORDPRESS SITE & MORE HERE
-
-  # Reverse proxy server to not make nextcloud and website images accessible from outside
-  server:
-    build: ./server
-    restart: always
-    ports:
-      - 80:80
-      - 443:443
-    labels:
-      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
-    volumes:
-      - server-certs:/etc/nginx/certs:z,ro
-      - server-vhost.d:/etc/nginx/vhost.d:z
-      - server-html:/usr/share/nginx/html:z
-      - /var/run/docker.sock:/tmp/docker.sock:z,ro
-    networks:
-      - proxy-tier
-
-  # Lets encrypt companion service to accept https queries
-  server-ssl-companion:
-    image: nginxproxy/acme-companion
-    restart: always
-    volumes:
-      - server-certs:/etc/nginx/certs:z
-      - server-acme:/etc/acme.sh:z
-      - server-vhost.d:/etc/nginx/vhost.d:z
-      - server-html:/usr/share/nginx/html:z
-      - /var/run/docker.sock:/var/run/docker.sock:z,ro
-    networks:
-      - proxy-tier
-    depends_on:
-      - server
