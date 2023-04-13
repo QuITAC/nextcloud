@@ -64,6 +64,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nextcloud.rule=Host('cloud.queerreferat.ac')"
+      - "traefik.http.routers.nextcloud.middlewares=authelia@docker"
     depends_on:
       - nextcloud-app
     networks:
