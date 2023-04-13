@@ -61,10 +61,9 @@ services:
     restart: always
     volumes:
       - nextcloud-app:/var/www/html:z,ro
-    environment:
-      - VIRTUAL_HOST=cloud.queerreferat.ac
-      - LETSENCRYPT_HOST=cloud.queerreferat.ac
-      - LETSENCRYPT_EMAIL=<EMAIL>
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud.rule=Host('cloud.queerreferat.ac')"
     depends_on:
       - nextcloud-app
     networks:
