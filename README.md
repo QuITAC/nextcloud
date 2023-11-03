@@ -1,13 +1,19 @@
-Nextcloud docker web service for Queerreferat Aachen
+# Nextcloud docker web service for Queerreferat Aachen
+
+The final target URL for this is `cloud.queerreferat.ac`.
 
 ## Deploy
 
-1. open `docker-compose.yml` and choose a root password for the database at `MYSQL_ROOT_PASSWORD=`
-2. choose a password for the database user nextcloud in `db.env` behind `MYSQL_PASSWORD=`
-3. run `docker-compose build --pull` to pull the most recent base images and build the custom dockerfiles
-4. start everything with `docker-compose up -d`
-5. visit `cloud.queerreferat.ac` to set up the nextcloud
-6. Install the app `OpenID Connect Login` for the nextcloud and add the following to Nextcloud's `config.php` (copied from the documentation of the app, not yet edited):
+The default way to deploy nextcloud has changed from single containers to some aio container that wants access to the docker socket (although this can be circumvented).
+
+This has (a) repurcussions for how to setup traefik routing and (b) invalidated our previous compose files. The new sample compose file is in the repo here. A lot more info is given in <https://github.com/nextcloud/all-in-one>.
+
+## SSO
+
+We want to use authentik as SSO for nextcloud. There are multiple plugins to enable this. There is only one that is supported by Nextcloud itself: `OpenID Connect Login`.
+
+The following sample php config for nc was found on in the net.
+Supposedly, the plugin supports group matching between authentik and nc as well, however this is not documented on the authentik docs.
 
 ```php
 $CONFIG = array (
@@ -202,13 +208,9 @@ $CONFIG = array (
 
    // Code challenge method for PKCE flow.
    // Possible values are:
-   //	- 'S256'
-   //	- 'plain'
+   // - 'S256'
+   // - 'plain'
    // The default value is empty, which won't apply the PKCE flow.
    'oidc_login_code_challenge_method' => '',
 );
 ```
-
-### Update
-
-repeat steps 3 and 4 of the deployment
