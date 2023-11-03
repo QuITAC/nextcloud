@@ -1,13 +1,16 @@
-version: "3"
+version: "3.4"
 
 volumes:
   nextcloud-db:
-  nextcloud-app:
+  appdata:
+
 
 networks:
   proxy:
     external: true
     name: shared-proxy
+  nc_internal:
+
 
 services:
   # MariaDB for data in Nextcloud
@@ -23,18 +26,22 @@ services:
       - MARIADB_DISABLE_UPGRADE_BACKUP=1
     env_file:
       - db.env
+    networks:
+      - nc_internal
 
   # Redis DB for caching Nextcloud
   nextcloud-cache:
     image: redis:alpine
     restart: always
+    networks:
+      - nc_internal
 
   # The Nextcloud itself
-  nextcloud-app:
-    image: nextcloud:fpm-alpine
+  nextcloud:
+    image: nextcloud:alpine
     restart: always
     volumes:
-      - nextcloud-app:/var/www/html:z
+      - appdata:/var/www/html:z
     environment:
       - MYSQL_HOST=nextcloud-db
       - REDIS_HOST=nextcloud-cache
@@ -43,30 +50,21 @@ services:
     depends_on:
       - nextcloud-db
       - nextcloud-cache
-
-  # Cron Job for Nextcloud
-  nextcloud-cron:
-    image: nextcloud:fpm-alpine
-    restart: always
-    volumes:
-      - nextcloud-app:/var/www/html:z
-    entrypoint: /cron.sh
-    depends_on:
-      - nextcloud-db
-      - nextcloud-cache
-
-  # Webserver for the nextcloud
-  nextcloud-server:
-    build: ./nextcloud-server
-    restart: always
-    volumes:
-      - nextcloud-app:/var/www/html:z,ro
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.queerreferat.ac`)"
-      - "traefik.http.routers.nextcloud.middlewares=authelia@docker"
-    depends_on:
-      - nextcloud-app
+      - "traefik.http.routers.nextcloud.rule=Host(`cloud.queerreferat.ac`)"
     networks:
       - proxy
-      - default
+      - nc_internal
+  # Cron Job for Nextcloud
+  # nextcloud-cron:
+  #   image: nextcloud:fpm-alpine
+  #   restart: always
+  #   volumes:
+  #     - nextcloud-app:/var/www/html:z
+  #   entrypoint: /cron.sh
+  #   depends_on:
+  #     - nextcloud-db
+  #     - nextcloud-cache
+  #   networks:
+  #     - nc_internal
