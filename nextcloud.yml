@@ -5,30 +5,9 @@ http:
       entrypoints:
         - "https"
       service: nextcloud
-      middlewares:
-        - nextcloud-chain
-      tls:
-        certresolver: "letsencrypt"
 
   services:
     nextcloud:
       loadBalancer:
         servers:
           - url: "http://localhost:11000"
-
-  middlewares:
-    nextcloud-secure-headers:
-      headers:
-        hostsProxyHeaders:
-          - "X-Forwarded-Host"
-        referrerPolicy: "same-origin"
-
-    https-redirect:
-      redirectscheme:
-        scheme: https 
-
-    nextcloud-chain:
-      chain:
-        middlewares:
-          - https-redirect
-          - nextcloud-secure-headers
