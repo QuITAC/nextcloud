@@ -2,8 +2,6 @@ http:
   routers:
     nextcloud:
       rule: "Host(`cloud.queerreferat.ac`)"
-      entrypoints:
-        - "https"
       service: nextcloud
 
   services:
