@@ -1,25 +1,25 @@
 version: "3.4"
 
 volumes:
-  nextcloud-db:
+  db:
   appdata:
 
 
 networks:
   proxy:
     external: true
-    name: shared-proxy
-  nc_internal:
+    name: proxy
+  internal:
 
 
 services:
   # MariaDB for data in Nextcloud
-  nextcloud-db:
+  db:
     image: mariadb:10.6
     command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
     restart: always
     volumes:
-      - nextcloud-db:/var/lib/mysql:Z
+      - db:/var/lib/mysql:Z
     environment:
       - MYSQL_ROOT_PASSWORD=1234
       - MARIADB_AUTO_UPGRADE=1
@@ -27,35 +27,36 @@ services:
     env_file:
       - db.env
     networks:
-      - nc_internal
+      - internal
 
   # Redis DB for caching Nextcloud
-  nextcloud-cache:
+  cache:
     image: redis:alpine
     restart: always
     networks:
-      - nc_internal
+      - internal
 
   # The Nextcloud itself
-  nextcloud:
-    image: nextcloud:alpine
+  app:
+    container_name: nextcloud-app
+    image: nextcloud:latest
     restart: always
     volumes:
       - appdata:/var/www/html:z
     environment:
-      - MYSQL_HOST=nextcloud-db
-      - REDIS_HOST=nextcloud-cache
+      - MYSQL_HOST=db
+      - REDIS_HOST=cache
     env_file:
       - db.env
     depends_on:
-      - nextcloud-db
-      - nextcloud-cache
+      - db
+      - cache
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nextcloud.rule=Host(`cloud.queerreferat.ac`)"
     networks:
       - proxy
-      - nc_internal
+      - internal
   # Cron Job for Nextcloud
   # nextcloud-cron:
   #   image: nextcloud:fpm-alpine
