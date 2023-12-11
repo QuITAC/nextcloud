@@ -55,6 +55,16 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nextcloud.rule=Host(`cloud.queerreferat.ac`)"
+      - "traefik.http.routers.nextcloud.middlewares=nextcloud-dav,sec-headers"
+      - "traefik.http.middlewares.nextcloud-dav.replacepathregex.regex=^/.well-known/ca(l|rd)dav"
+      - "traefik.http.middlewares.nextcloud-dav.replacepathregex.replacement=/remote.php/dav/"
+      - "traefik.http.middlewares.sec-headers.headers.referrerPolicy=no-referrer"
+      - "traefik.http.middlewares.sec-headers.headers.stsSeconds=31536000"
+      - "traefik.http.middlewares.sec-headers.headers.forceSTSHeader=true"
+      - "traefik.http.middlewares.sec-headers.headers.stsPreload=true"
+      - "traefik.http.middlewares.sec-headers.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.sec-headers.headers.browserXssFilter=true"
+      - "traefik.http.middlewares.sec-headers.headers.customRequestHeaders.X-Forwarded-Proto=https"
     networks:
       - proxy
       - internal
