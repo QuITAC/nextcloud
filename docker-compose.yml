@@ -25,7 +25,7 @@ services:
       - MARIADB_AUTO_UPGRADE=1
       - MARIADB_DISABLE_UPGRADE_BACKUP=1
     env_file:
-      - db.env
+      - .env
     networks:
       - internal
 
@@ -43,11 +43,12 @@ services:
     restart: always
     volumes:
       - appdata:/var/www/html:z
+      - ./config/additional.config.php:/var/www/html/config/additional.config.php
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=cache
     env_file:
-      - db.env
+      - .env
     depends_on:
       - db
       - cache
