@@ -4,6 +4,6 @@
 
 \- 🗨️ `Talk` (Alternative zu Slack & Co) - gibt es als `Nextcloud Talk` auch als App
 
-\- 📘 `Kollektive` (Wiki) - hier findest du Dokumentationen und Protokolle
+\- 📘 `Kollektive` (Wiki) - hier findest du Anleitungen und Ideensammlungen
 
 Sobald du dich mit allem vertraut gemacht hast, kannst du dieses Widget gerne entfernen - klicke dazu unten einfach auf `Anpassen`

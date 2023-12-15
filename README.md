@@ -1,7 +1,7 @@
 # Nextcloud docker web service for Queerreferat Aachen
 ## Usage
-Access this service at `cloud.queerreferat.ac`. You find all important user
-documentation in the app `Collectives` from within the Nextcloud.
+Access this service at `cloud.queerreferat.ac`.
+<!--You find all important user documentation in the app `Collectives` from within the Nextcloud. -->
 
 ## Deploy
 To deploy Nextcloud, make sure the Traefik reverse proxy is already running.
@@ -23,7 +23,7 @@ Authentik](https://goauthentik.io/integrations/services/nextcloud/).
 automatically notify other users (might be added to the `additional.config.php`,
 be cautios beause of SMTP auth configuration, if not be more verbal here @todo)
 - Create a new text file `Welcome.md` from the `Files` app and copy the content
-  from `./files/Welcome.md` in there. 
+  from `./files/Welcome.md` in there.
 - Adjust the settings at `Administration settings -> Theming`:
   - Under `Theming``:
     - Set `Name` to `Queerreferat Aachen Cloud`
@@ -40,7 +40,7 @@ be cautios beause of SMTP auth configuration, if not be more verbal here @todo)
     - Set `Markdown content file` to the previously created `Welcome.md`
     - Set `Widget title` to `Willkommen :)`
     - Set `Support contact` to a user that has voluntarily agreeed to provide
-      support 
+      support
     - Set `Support text` to `Kontaktiere {name} für technische Hilfe :)`
 
 ## Notes

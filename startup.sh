@@ -2,7 +2,7 @@
 docker compose up -d
 
 # install and enable apps
-appsToInstall=("collectives" "cospend" "deck" "extract" "forms" "passwords" "polls" "side_menu" "unroundedcorners" "user_oidc")
+appsToInstall=("collectives" "cospend" "deck" "extract" "forms" "passwords" "polls" "side_menu" "unroundedcorners" "richdocuments" "richdocumentscode" "user_oidc")
 for t in ${appsToInstall[@]}; do
   docker exec -u www-data nextcloud-app php /var/www/html/occ app:install $t
   docker exec -u www-data nextcloud-app php /var/www/html/occ app:enable $t
