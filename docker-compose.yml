@@ -43,7 +43,7 @@ services:
     restart: always
     volumes:
       - data:/var/www/html:z
-      # - ./config/additional.config.php:/var/www/html/config/additional.config.php
+      - ./config/additional.config.php:/var/www/html/config/additional.config.php
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=cache
