@@ -48,3 +48,11 @@ The startup script automatically forwards users that are not logged into the
 Nextcloud to the SSO. To access the Nextcloud's admin interface, append
 `?direct=1` to the nextcloud login URL. You can then login as usual with the
 admin user account.
+
+From the logs:
+
+```text
+=> Searching for scripts (*.sh) to run, located in the folder: /docker-entrypoint-hooks.d/before-starting
+```
+
+Could this be a hook to start other scripts? like the install script?
