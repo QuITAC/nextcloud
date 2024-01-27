@@ -3,11 +3,6 @@
 Access this service at `cloud.queerreferat.ac`. You find all important user
 documentation in the app `Collectives` from within the Nextcloud.
 
-## Notes
-Users that are not logged into the Nextcloud are automatically forwarded to the
-SSO. To access the Nextcloud's admin interface, append `?direct=1` to the
-nextcloud login URL. You can then login as usual with the admin user account.
-
 ## Deploy
 To deploy Nextcloud, make sure the Traefik reverse proxy is already running.
 Then simply run
@@ -51,3 +46,22 @@ If the Nextcloud is set up from the ground up also go through these steps:
     - Set `Support contact` to a user that has voluntarily agreeed to provide
       support 
     - Set `Support text` to `Kontaktiere {name} für technische Hilfe :)`
+      support
+    - Set `Support text` to `Kontaktiere {name} für technische Hilfe :)`
+
+## Notes
+The startup script automatically forwards users that are not logged into the Nextcloud to the SSO. To access the Nextcloud's admin interface, append `/login?direct=1` to the nextcloud URL. You can then login as usual with the admin user account.
+
+---
+
+From the logs on initial startup:
+
+```
+=> Searching for scripts (*.sh) to run, located in the folder: /docker-entrypoint-hooks.d/before-starting
+```
+
+Could this be a hook to start other scripts? like the install script?
+
+---
+
+Only after the Admin account has been set by the user interactively on first startup, the nc application is created by `entrypoint.sh`. That means when we mount the config files directly into the container, the `config` folder is created by docker and set to be owned by root. the entrypoint script can then no longer access the config folder and fails. To be precise the script fails even earlier: you can't declare the admin account data.

@@ -2,7 +2,7 @@ version: "3.4"
 
 volumes:
   db:
-  appdata:
+  data:
 
 
 networks:
@@ -15,19 +15,19 @@ networks:
 services:
   # MariaDB for data in Nextcloud
   db:
-    image: mariadb:10.6
+    image: mariadb:10.6 #latest version?
     command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
     restart: always
     volumes:
       - db:/var/lib/mysql:Z
     environment:
-      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MARIADB_AUTO_UPGRADE=1
       - MARIADB_DISABLE_UPGRADE_BACKUP=1
-    env_file:
-      - .env
     networks:
       - internal
+    env_file:
+      - .env
 
   # Redis DB for caching Nextcloud
   cache:
@@ -42,13 +42,15 @@ services:
     image: nextcloud:latest
     restart: always
     volumes:
-      - appdata:/var/www/html:z
+      - data:/var/www/html:z
       - ./config/additional.config.php:/var/www/html/config/additional.config.php
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=cache
-    env_file:
-      - .env
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - TRUSTED_PROXIES=${TRUSTED_PROXIES}
     depends_on:
       - db
       - cache
@@ -68,6 +70,8 @@ services:
     networks:
       - proxy
       - internal
+    env_file:
+      - .env
   # Cron Job for Nextcloud
   # nextcloud-cron:
   #   image: nextcloud:fpm-alpine
