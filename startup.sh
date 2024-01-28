@@ -19,3 +19,7 @@ docker exec -u www-data nextcloud-app php /var/www/html/occ config:app:set dashb
 
 # redirect users to sso automatically (see README on how to circumvent this)
 docker exec -u www-data nextcloud-app php /var/www/html/occ config:app:set user_oidc allow_multiple_user_backends --value=0
+
+# nc occ commands for global application settings
+#disable access to system address book for all users
+docker exec -u www-data nextcloud-app php /var/www/html/occ occ config:app:set dav system_addressbook_exposed --value="no"
